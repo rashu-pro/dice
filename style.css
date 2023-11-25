@@ -17,12 +17,11 @@
 	font-family: 'Poppins', sans-serif;
 } */
 @font-face {
-    font-family: InspireTWDC-Heavy;
-    src: url('fonts/InspireTWDC-Heavy.otf')
-    format('truetype');
-    font-display: swap;
-    font-style: normal;
-    font-weight: 600;
+	font-family: InspireTWDC-Heavy;
+	src: url('fonts/InspireTWDC-Heavy.otf') format('truetype');
+	font-display: swap;
+	font-style: normal;
+	font-weight: 600;
 }
 
 body {
@@ -35,19 +34,30 @@ body {
 	background-position: center;
 	font-family: InspireTWDC-Heavy;
 }
+
 .Main-div {
 	max-width: 550px;
 	margin: 0 auto;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+	padding:10px 0;
+	box-sizing: border-box;
 }
+
 .logo img {
-	width: 250px;
+	width: 550px;
 	margin: 0 auto;
 	display: block;
+	max-width: 100%;
 }
+
 .title {
 	color: #fff;
 	text-align: center;
 }
+
 .dice {
 	border: 3px dashed #fff;
 	padding: 20px;
@@ -57,6 +67,7 @@ body {
 	margin: 0 auto;
 	box-sizing: border-box;
 }
+
 canvas {
 	position: absolute;
 	top: 0;
@@ -65,15 +76,18 @@ canvas {
 	height: 100% !important;
 	object-fit: cover;
 }
+
 .ui-controls {
 	position: relative;
 	z-index: 9;
 	text-align: center;
 }
+
 .ui-controls #score-result {
 	font-weight: 700;
 	color: #780e1a;
 }
+
 .ui-controls #roll-btn {
 	background-color: #fff;
 	border: none;
@@ -87,9 +101,11 @@ canvas {
 	font-family: InspireTWDC-Heavy;
 	color: #000;
 }
+
 .ui-controls #roll-btn:active {
-    transform: translateY(4px);
+	transform: translateY(4px);
 }
+
 .ui-controls .score {
 	padding: 10px 20px;
 	background: #fff;
@@ -104,35 +120,52 @@ canvas {
 	font-weight: 600;
 }
 
+.footer-credit {
+	clear: both;
+	background-color: #fff;
+	margin-top: 130px;
+	text-align: center;
+}
 
 @media screen and (max-width:767px) {
-.Main-div {
-	max-width: 96%;
-}
-.dice {
-	border: 2px dashed #fff;
-	padding: 20px 10px;
-}	
-.title {
-	font-size: 17px;
-	line-height: 24px;
-}
-.ui-controls #roll-btn {
-	font-size: 14px;
-	min-width: 135px;
-	padding: 10px 5px;
-}
-.ui-controls .score {
-	padding: 10px 5px;
-	font-size: 14px;
-	min-width: 125px;
-	margin-left: 5px;
-	
-}
-/* canvas {
+	.Main-div {
+		max-width: 96%;
+	}
+
+	.dice {
+		border: 2px dashed #fff;
+		padding: 20px 10px;
+	}
+
+	.title {
+		font-size: 17px;
+		line-height: 24px;
+	}
+
+	.ui-controls #roll-btn {
+		font-size: 14px;
+		min-width: 135px;
+		padding: 10px 5px;
+	}
+
+	.ui-controls .score {
+		padding: 10px 5px;
+		font-size: 14px;
+		min-width: 125px;
+		margin-left: 5px;
+
+	}
+
+	/* canvas {
 	object-fit: contain;
 } */
-html, body {
-	overflow: hidden;
-}
+	html,
+	body {
+		overflow: hidden;
+	}
+
+	.footer-credit {
+		margin-top: 40px;
+
+	}
 }

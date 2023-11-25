@@ -1,6 +1,6 @@
 import * as CANNON from 'https://cdn.skypack.dev/cannon-es';
 import * as THREE from "three";
-import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 const canvasEl = document.querySelector('#canvas');
 const scoreResult = document.querySelector('#score-result');
@@ -11,7 +11,12 @@ let renderer, scene, camera, diceMesh, physicsWorld;
 const params = {
     numberOfDice: 1,
     edgeRadius: .1,
+    initialDiceScale: 1
 };
+const screenWidth = window.innerWidth;
+if (screenWidth <= 768) {
+    params.initialDiceScale = 0.5;
+}
 
 const diceArray = [];
 
@@ -34,12 +39,9 @@ function initScene() {
 
     scene = new THREE.Scene();
 
-    //camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, .1, 100)
-    //camera.position.set(0, .4, 3.5).multiplyScalar(6);
-    
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100)
     camera.position.set(0, 1, 1).multiplyScalar(6);
-    
+
     camera.lookAt(0, 0, 0);
 
     updateSceneSize();
@@ -75,7 +77,6 @@ function initPhysics() {
     physicsWorld.defaultContactMaterial.restitution = .3;
 }
 
-
 function createFloor() {
     const floor = new THREE.Mesh(
         new THREE.PlaneGeometry(1000, 1000),
@@ -100,21 +101,26 @@ function createFloor() {
 function createDiceMesh() {
     const texLoader = new THREE.TextureLoader();
     const boxMaterialOuter = [
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/2.png")}),
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/5.png")}),
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/1.png")}),
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/6.png")}),
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/3.png")}),
-        new THREE.MeshStandardMaterial({color: 0xeeeeee, map: texLoader.load("./images/4.png")}),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/2.png") }),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/5.png") }),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/1.png") }),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/6.png") }),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/3.png") }),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, map: texLoader.load("./images/4.png") }),
     ];
 
     const diceMesh = new THREE.Group();
     const outerMesh = new THREE.Mesh(new RoundedBoxGeometry(1, 1, 1, 5, params.edgeRadius), boxMaterialOuter);
     outerMesh.castShadow = true;
+
+    // Scale the dice directly
+    outerMesh.scale.set(params.initialDiceScale, params.initialDiceScale, params.initialDiceScale);
+
     diceMesh.add(outerMesh);
 
     return diceMesh;
 }
+
 
 function createDice() {
     const mesh = diceMesh.clone();
@@ -127,9 +133,8 @@ function createDice() {
     });
     physicsWorld.addBody(body);
 
-    return {mesh, body};
+    return { mesh, body };
 }
-
 
 function addDiceEvents(dice) {
     dice.body.addEventListener('sleep', (e) => {
@@ -199,23 +204,38 @@ function updateSceneSize() {
 function throwDice() {
     scoreResult.innerHTML = '';
 
+    const maxDicePositionX = 4; // Maximum position on the X-axis
+    const minDicePositionX = -4; // Minimum position on the X-axis
+
     diceArray.forEach((d, dIdx) => {
 
         d.body.velocity.setZero();
         d.body.angularVelocity.setZero();
 
-        d.body.position = new CANNON.Vec3(4, dIdx * 1.5, -.5);
+        // Adjust the initial position based on the screen size
+        const initialPositionX = window.innerWidth > 768 ? 4 : 2;
+
+        d.body.position = new CANNON.Vec3(initialPositionX, dIdx * 1.5, -0.5);
         d.mesh.position.copy(d.body.position);
 
-        d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random())
+        d.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random());
         d.body.quaternion.copy(d.mesh.quaternion);
 
-        const force = 1.3 + 1 * Math.random();
-        d.body.applyImpulse(
-            new CANNON.Vec3(-force, force, 0),
-            new CANNON.Vec3(0, 0, .2)
-        );
+        const force = window.innerWidth > 768 ? 1.4 + 1 * Math.random() : 0.7 + 0.8 * Math.random();
+
+        // Apply a force in a random direction
+        const forceDirection = new CANNON.Vec3(-force, force, 0);
+
+        // Reduce the force for mobile devices
+        // if (window.innerWidth <= 768) {
+        //     forceDirection.scale(0.5);
+        // }
+
+        d.body.applyImpulse(forceDirection, new CANNON.Vec3(0, 0, 0.2));
 
         d.body.allowSleep = true;
+
+        // Clamp the position to ensure it stays within the visible area
+        d.body.position.x = Math.min(maxDicePositionX, Math.max(minDicePositionX, d.body.position.x));
     });
 }
