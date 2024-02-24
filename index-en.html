@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tomato red - Mickey and friends</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css?v=2.0.7">
+</head>
+
+<body>
+  <div class="Main-div">
+    <div class="header">
+      <div class="header-inner">
+        <a class="logo" href=""><img src="images/banner-disney.min.jpg" alt=""></a>
+      </div>
+      
+    </div>
+
+    <div class="body-main">
+      <div class="body-inner">
+        <h1 class="title">Rolls the dice and get the score</h1>
+
+      <div class="dice">
+        <div class="ui-controls">
+          <button id="roll-btn">Rolls the dice</button>
+          <div class="score">Outcome: <span id="score-result"></span></div>
+        </div>
+        <canvas id="canvas"></canvas>
+      </div>
+      </div>
+    </div>
+
+    <div class="footer-credit">
+      <div class="footer-inner">
+        <div class="footer-credit-inner">
+          <img src="images/logo.min.jpg" class="logo-footer img-fluid" alt=""><br>
+          <span style="font-family: InspireTWDC-Heavy !important;font-size: 12px !important;">Made with <i
+              class="fa-solid fa-heart"></i> and lots of <i class="fa-solid fa-pizza-slice"></i> from <a
+              href="https://culturedigitali.eu/" target="_blank" style="text-decoration:none">Culture
+              Digitali</a><br></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="importmap">{
+	"imports": {
+		"three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.145.0/three.module.min.js",
+		"three/addons/": "https://threejs.org/examples/jsm/"
+	}
+}
+</script>
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+  <!-- partial -->
+  <script type="module" src="./script.js"></script>
+  <script src="https://kit.fontawesome.com/df6f9f0f34.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
